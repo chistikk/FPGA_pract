@@ -1,7 +1,7 @@
 module crc8
 (
   input  logic       clk_i,
-  input  logic       rst_i,
+  input  logic       rstn_i,
   input  logic [7:0] din_i,
   input  logic       data_valid_i,
   input  logic       crc_rd,
@@ -13,14 +13,14 @@ module crc8
   localparam BUSY = 2'b01;
   localparam READ = 2'b10;
 
-  logic [2:0] state_ff;         // Регистр состояний
+  logic [1:0] state_ff;         // Регистр состояний
   logic [7:0] data_current_ff;  // Текущие данные (сдвиговый регистр)
   logic [3:0] crc_counter_ff;   // Регистр счетчик обработанных бит входного байта данных для состояния вычисления
   logic [7:0] crc_ff;           // Выходные данные CRC
 
   always_ff @(posedge clk_i)
   begin
-    if (rst_i) begin // Сигнал сброса - обнуляем все регистры
+    if (!rstn_i) begin // Сигнал сброса - обнуляем все регистры
       state_ff         <= IDLE;
       data_current_ff  <= 8'b0;
       crc_ff           <= 8'b0;
